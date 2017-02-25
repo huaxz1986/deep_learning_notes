@@ -543,9 +543,9 @@ diag(\mathbf{\vec \lambda})=\begin{bmatrix}
 		- 迭代，直到停止条件。迭代步骤为：	
 			- 从训练集中采样 \\(m\\) 个样本 \\(\\{\mathbf{\vec x}\_1,\mathbf{\vec x}\_2,\cdots,\mathbf{\vec x}\_m\\}\\) 构成`minibatch`。对应的标记为 \\(\\{y_1,y_2,\cdots,y_m\\}\\)
 
-			- 计算临时更新： \\(\tilde \vec\theta\leftarrow \vec\theta+\alpha+\mathbf{\vec v}\\)
+			- 计算临时更新： \\(\tilde {\vec\theta}\leftarrow \vec\theta+\alpha+\mathbf{\vec v}\\)
 			- 计算`minibatch`上的梯度作为训练集的梯度的估计：
-			$$\hat{\mathbf{\vec g}}\leftarrow \frac 1m \nabla\_{\tilde\vec\theta}\sum\_{i=1}^{m}L(f(\mathbf{\vec x}\_i;\tilde\vec\theta),y_i) $$
+			$$\hat{\mathbf{\vec g}}\leftarrow \frac 1m \nabla\_{\tilde{\vec\theta}}\sum\_{i=1}^{m}L(f(\mathbf{\vec x}\_i;\tilde{\vec\theta}),y_i) $$
 			- 累计平方梯度： \\(\mathbf{\vec r}\leftarrow \rho\mathbf{\vec r}+(1-\rho)\hat{\mathbf{\vec g}}\odot\hat{\mathbf{\vec g}}\\)
 			> \\(\odot\\) 表示两个向量的逐元素的相乘
 			- 计算速度更新（逐元素）：
