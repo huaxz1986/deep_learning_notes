@@ -4,7 +4,7 @@
 ### 1. 基本概念
 1. 深度前馈网络（`deep feedfoward network`）也称作前馈神经网络（`feedforward neural network`）或者多层感知机（`multilayer perceptron:MLP`），它是典型的深度学习模型
 	- 深度前馈网络的目标是：近似某个函数 \\(f^{\*}\\) 
-		> 例如：分类器 \\(y=f^{\*}(\mathbf{\vec x})\\) 将输入  \\(\mathbf{\vec x}\\)  映射到它的真实类别 \\(y\\) 。深度前馈网络定义另一个映射  \\(y^{\prime}=f(\mathbf{\vec x};\theta)\\)，并且学习参数 \\(\theta\\) 从而使得 \\(f\\) 是 \\(f^{\*}\\)  的最佳近似。
+		> 例如：分类器 \\(y=f^{\*}(\mathbf{\vec x})\\) 将输入  \\(\mathbf{\vec x}\\)  映射到它的真实类别 \\(y\\) 。深度前馈网络定义另一个映射  \\(y^{\prime}=f(\mathbf{\vec x};\vec\theta)\\)，并且学习参数 \\(\vec\theta\\) 从而使得 \\(f\\) 是 \\(f^{\*}\\)  的最佳近似。
 
 2. 深度前馈网络之所以称作前馈的（`feedforward`），是因为：信息从输入 \\(\mathbf{\vec x}\\) 到输出是单向流动的，并没有从输出到模型本身的反馈连接。
 	> 如果存在反馈连接，则这样的模型称作循环神经网络（`recurrent neural networks`）
@@ -15,7 +15,7 @@
 	- 最简单的情况：有向无环图是链式结构。假设有三个函数 \\(f_1,f_2,f_3\\) 组成链式复合结构，则：
 	$$f(\mathbf{\vec x})=f_3(f_2(f_1(\mathbf{\vec x}))) $$
 	其中： \\(f_1\\) 被称作网络的第一层， \\(f_2\\) 为网络第二层，\\(f_3\\) 称为网络第三层。链的全长称作模型的深度。
-	![feedforward](../imgs/6/feedforward.jpg)
+	![feedforward](../imgs/6/feedforward.PNG)
 	- 深度前馈网络的最后一层也称作输出层。输出层的输入为 \\(f_2(f_1(\mathbf{\vec x}))\\)，输出为 \\(f(\mathbf{\vec x})\\)
 	- 给定训练样本 \\( (\mathbf{\vec x},y)\\)，要求输出层的输出 \\(f(\mathbf{\vec x}) \approx y\\)，但是对于其他层并没有任何要求。学习算法必须决定如何利用这些层来配合输出层来产生想要的结果。
 	- 因为我们无法观测到除输出层以外的那些层的输出，因此那些层被称作隐层(`hidden layer`)
@@ -29,17 +29,17 @@
 	- 一个选择是使用一个通用的  \\(\phi\\)，如无限维的  \\(\phi\\)（采用基于 `RBF`核的核技巧）。当  \\(\phi\\) 具有足够高的维数，则我们总是有足够的能力来适应训练集，但是对于测试集的泛化往往不佳。这是因为：通用的  \\(\phi\\) 通常只是基于局部平滑的原则，并没有利用足够多的先验知识来解决高级问题。
 	- 另一个选择是手动设计 \\(\phi\\) 。这种方法对于专门的任务往往需要数十年人们的努力（如语音识别任务）
 	- 深度学习的方案是去学习  \\(\phi\\)。 以单层隐层的深度前馈网络为例：
-	$$y=f(\mathbf{\vec x};\theta,\mathbf{\vec w})=\phi(\mathbf{\vec x};\theta)^{T}\mathbf{\vec w} $$
+	$$y=f(\mathbf{\vec x};\vec\theta,\mathbf{\vec w})=\phi(\mathbf{\vec x};\vec\theta)^{T}\mathbf{\vec w} $$
 		此时我们有两个参数：
-		- 参数 \\(\theta\\) ：从一族函数中学习 \\(\phi\\)   （其中 \\(\phi\\) 定义了一个隐层）
+		- 参数 \\(\vec\theta\\) ：从一族函数中学习 \\(\phi\\)   （其中 \\(\phi\\) 定义了一个隐层）
 		- 参数 \\(\mathbf{\vec w}\\) ：将 \\(\phi(\mathbf{\vec x})\\) 映射到所需输出
 		 
 
-		这种方法是这三种方案中，唯一一个放弃了寻找待求解问题的凸性的方案，但是利大于弊。此方案中，我们将`representation`参数化为 \\(\phi(\mathbf{\vec x};\theta)\\)，并使用优化算法来寻找 \\(\theta\\) 从而得到一个很好的 `representation`。
-		- 如果我们使用一个非常宽泛的函数族 \\(\phi(\mathbf{\vec x};\theta)\\)，则我们能获得第一种方案的好处。
-		- 如果我们将人们的先验知识编码到函数族 \\(\phi(\mathbf{\vec x};\theta)\\) 中，则我们能获得第二种方案的好处。
+		这种方法是这三种方案中，唯一一个放弃了寻找待求解问题的凸性的方案，但是利大于弊。此方案中，我们将`representation`参数化为 \\(\phi(\mathbf{\vec x};\vec\theta)\\)，并使用优化算法来寻找 \\(\vec\theta\\) 从而得到一个很好的 `representation`。
+		- 如果我们使用一个非常宽泛的函数族 \\(\phi(\mathbf{\vec x};\vec\theta)\\)，则我们能获得第一种方案的好处。
+		- 如果我们将人们的先验知识编码到函数族 \\(\phi(\mathbf{\vec x};\vec\theta)\\) 中，则我们能获得第二种方案的好处。
 
-		因此深度学习的方案中，人们只需要寻找合适的、宽泛的函数族 \\(\phi(\mathbf{\vec x};\theta)\\) ，而不是某一个映射函数 \\(\phi(\mathbf{\vec x})\\) 
+		因此深度学习的方案中，人们只需要寻找合适的、宽泛的函数族 \\(\phi(\mathbf{\vec x};\vec\theta)\\) ，而不是某一个映射函数 \\(\phi(\mathbf{\vec x})\\) 
 
 2. 通过学习`representation`来改善模型不仅仅适用于前馈神经网络，它是深度学习中反复出现的主题，适用于几乎所有的深度学习模型。
 
@@ -57,27 +57,27 @@
 	\text{xor}(1,1)= 0$$
 	设我们想要学习的目标函数为：\\(y=f^{\*}( \mathbf{\vec x})=\text{xor}(x_1,x_2)\\)，其中 \\(\mathbf{\vec x}=(x_1,x_2)^{T}\\)，即 \\(x_1,x_2\\)  为输入  \\(\mathbf{\vec x}\\) 的两个分量。
 
-	假设我们的模型给出了一个函数 \\(\hat y=f(\mathbf{\vec x};\theta)\\)，我们期望学习参数 \\(\theta\\)，从而使得 \\(f\\) 尽可能接近 \\(f^{\*}\\) 
+	假设我们的模型给出了一个函数 \\(\hat y=f(\mathbf{\vec x};\vec\theta)\\)，我们期望学习参数 \\(\vec\theta\\)，从而使得 \\(f\\) 尽可能接近 \\(f^{\*}\\) 
 
 2. 我们考虑一个简单的数据集 \\(\mathbb X=\\{(0,0)^{T},(0,1)^{T},(1,0)^{T},(1,1)^{T}\\}\\) 。我们期望我们的模型 \\(f\\) 在这四个点上都尽可能接近 \\(f^{\*}\\) 。
 
 	我们采用`MSE`损失函数为：
-	$$ J(\theta)=\frac 14\sum\_{\mathbf{\vec x}\in \mathbb X}[f^{\*}( \mathbf{\vec x})-f(\mathbf{\vec x};\theta)]^{2}$$
+	$$ J(\vec\theta)=\frac 14\sum\_{\mathbf{\vec x}\in \mathbb X}[f^{\*}( \mathbf{\vec x})-f(\mathbf{\vec x};\vec\theta)]^{2}$$
 
 
 3. 假设我们选择一个线性模型： \\(f(\mathbf{\vec x};\mathbf{\vec w},b)=\mathbf{\vec x}^{T}\mathbf{\vec w}+b\\)。
 
-	通过最小化 \\( J(\theta)\\)，我们得到：
+	通过最小化 \\( J(\vec\theta)\\)，我们得到：
 	$$\mathbf{\vec w}=\mathbf{\vec 0},\quad b=\frac 12 $$
 	即： \\(f(\mathbf{\vec x};\mathbf{\vec w},b)=\frac 12\\)。这意味着：线性模型将在每一点都是输出 0.5 。
 
 	从下图可知：当 \\(x_1=0\\) 时，函数的输出随着 \\(x_2\\) 的增加而增加；当 \\(x_1=1\\) 时，函数的输出随着 \\(x_2\\) 的增加而减少。因此导致了 \\(w_2=0\\)；同理 \\(w_1=0\\) 。
 
-	![xor_linear](../imgs/6/xor_linear.jpg)
+	![xor_linear](../imgs/6/xor_linear.PNG)
 
 4. 假设我们采用一个简单的深度前馈网络。该网络结构如下，它有一层隐层，并且隐层中包含两个单元。
 
-	![xor_net](../imgs/6/xor_net.jpg)
+	![xor_net](../imgs/6/xor_net.PNG)
 	- 第一层为隐层，对应于函数： \\(f_1(\mathbf{\vec x};\mathbf W,\mathbf{\vec c})\\)，其输入为 \\(\mathbf{\vec x}=(x_1,x_2)^{T}\\) ，输出为 \\(\mathbf{\vec h}=(h_1,h_2)^{T}\\)
 	- 第二层为输出层，对应于函数：  \\(f_2(\mathbf{\vec h};\mathbf{\vec w},b)\\)，其输入为 \\(\mathbf{\vec h}\\) ，输出为 \\(\hat y\\) 。我们令输出层仍然是一个线性回归模型，即： \\(f_2(\mathbf{\vec h};\mathbf{\vec w},b)=\mathbf{\vec h}^{T} \mathbf{\vec w}+b\\)
 
@@ -110,7 +110,7 @@
 	0&0\\\1&0\\\1&0\\\2&1
 	\end{bmatrix} $$
 	\\(\mathbf H\\) 的每一行表示一个 \\(\mathbf{\vec h}\_i\\)  。可以看到：隐层改变了样本之间的关系。
-	![xor_forward](../imgs/6/xor_forward.jpg) 
+	![xor_forward](../imgs/6/xor_forward.PNG) 
 
 	将 \\(\mathbf H \mathbf{\vec w} +\mathbf{\vec 0}\\)，得到：
 	$$
@@ -135,16 +135,16 @@
 
 2. 深度学习的一个重要方面是代价函数的选取。通常神经网络的代价函数与参数模型（如线性模型）的代价函数相同。
 	- 大多数现代的神经网络采用最大似然准则，令代价函数为负的对数似然函数：
-	$$J(\theta)=-\mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}} \log p\_{model}(y\mid \mathbf{\vec x};\theta)  $$
+	$$J(\vec\theta)=-\mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}} \log p\_{model}(y\mid \mathbf{\vec x};\vec\theta)  $$
 	- 代价函数的具体形式取决于 \\(p\_{model}\\)的形式，随不同的模型而改变。
-	> 如：当  \\( p\_{model}(y\mid \mathbf{\vec x};\theta)=\mathcal N(y;f(\mathbf{\vec x};\theta),\mathbf I)\\) 时， \\( J(\theta)=\frac 12 \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}}||y-f(\mathbf{\vec x};\theta)||^{2}+\text{const} \\)，常数项包含了高斯分布的方差（与 \\(\theta\\) 无关）。因此可以看到：此时的最大似然估计等价于最小均方误差。
+	> 如：当  \\( p\_{model}(y\mid \mathbf{\vec x};\vec\theta)=\mathcal N(y;f(\mathbf{\vec x};\vec\theta),\mathbf I)\\) 时， \\( J(\vec\theta)=\frac 12 \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}}||y-f(\mathbf{\vec x};\vec\theta)||^{2}+\text{const} \\)，常数项包含了高斯分布的方差（与 \\(\vec\theta\\) 无关）。因此可以看到：此时的最大似然估计等价于最小均方误差。
 	- 使用最大似然准则来导出代价函数的优势是：减轻了为每个模型设计代价函数的负担。明确了一个模型 \\(p\_{model}(y\mid \mathbf{\vec x})\\) ，则自动地确定了一个代价函数 \\(-\log p\_{model}(y\mid \mathbf{\vec x})\\)
 
 3. 贯穿神经网络设计的一个重要的主题是：代价函数的梯度必须足够大且能够计算。
 	- 如果代价函数非常平缓，则它使得代价函数的梯度非常小。梯度很小甚至消失，会导致迭代无法推进。
 	- 当代价函数上溢出时，会出现问题。采用负的对数似然函数作为代价函数可以帮助我们避免这个问题。
 
-4. 有的时候我们并不是希望得到一个完整的概率分布 \\(p(y\mid \mathbf{\vec x};\theta)\\)，而是某个条件统计量（比如条件期望、或者条件方差）。
+4. 有的时候我们并不是希望得到一个完整的概率分布 \\(p(y\mid \mathbf{\vec x};\vec\theta)\\)，而是某个条件统计量（比如条件期望、或者条件方差）。
 	- 假设我们的代价函数为均方误差，我们要学习的是函数 \\(f\\)：
 	$$f^{\*}=\arg\min\_f \mathbb E\_{\mathbf{\vec x},y\sim p\_{data}} || y-f(\mathbf{\vec x})||^{2}$$
 	它是一个泛函的最优化问题，通过变分法解出：
@@ -194,7 +194,7 @@
 	即： \\(P(y \mid \mathbf{\vec x})=\sigma((2y-1)z) \\)
 
 3. 我们基于最大似然函数来学习`sigmoid`参数化的伯努利分布。其代价函数为：
-	$$ J(\theta)=-\log P(y\mid \mathbf{\vec x})=-\log \sigma((2y-1)z)\\\
+	$$ J(\vec\theta)=-\log P(y\mid \mathbf{\vec x})=-\log \sigma((2y-1)z)\\\
 	= \zeta((1-2y)z)$$
 	可以看到，只有当 \\((1-2y)z\\) 取一个非常大的负值时，代价函数才发生饱和。因此饱和只会发生在:
 	-  \\(y=1\\) 且 \\(z\\) 为一个较大的正值
@@ -239,11 +239,11 @@
 
 ### 4. 其他输出单元
 1. 神经网络推广到任何其他类型的输出单元。
-	- 最大似然准则为几乎任何类型的输出单元提供了如何设计一个良好的代价函数的指导。如果我们定义了一个条件分布 \\(p\_{model}(y\mid \mathbf{\vec x};\theta)\\)，则最大似然准则建议我们使用 \\(-\log p\_{model}(y\mid \mathbf{\vec x};\theta)\\) 作为代价函数。
+	- 最大似然准则为几乎任何类型的输出单元提供了如何设计一个良好的代价函数的指导。如果我们定义了一个条件分布 \\(p\_{model}(y\mid \mathbf{\vec x};\vec\theta)\\)，则最大似然准则建议我们使用 \\(-\log p\_{model}(y\mid \mathbf{\vec x};\vec\theta)\\) 作为代价函数。
 
-2. 通常我们认为神经网络表示函数 \\(f(\mathbf{\vec x};\theta)\\)。但是该函数的输出并不是对标记值 \\(y\\) 的直接预测，而是为 \\(y\\) 的分布提供了参数（比如正态分布的均值、方差等参数）。
-	- 令 \\(f(\mathbf{\vec x};\theta)=\eta(\mathbf{\vec x})\\)，则根据最大似然准则，我们的损失函数可以表示成：  \\(-\log p\_{model}(y\mid \eta(\mathbf{\vec x}))\\)
-	- 比如我们想学习   \\(p\_{model}(y\mid \mathbf{\vec x};\theta) \\) 为高斯分布时的方差。
+2. 通常我们认为神经网络表示函数 \\(f(\mathbf{\vec x};\vec\theta)\\)。但是该函数的输出并不是对标记值 \\(y\\) 的直接预测，而是为 \\(y\\) 的分布提供了参数（比如正态分布的均值、方差等参数）。
+	- 令 \\(f(\mathbf{\vec x};\vec\theta)=\eta(\mathbf{\vec x})\\)，则根据最大似然准则，我们的损失函数可以表示成：  \\(-\log p\_{model}(y\mid \eta(\mathbf{\vec x}))\\)
+	- 比如我们想学习   \\(p\_{model}(y\mid \mathbf{\vec x};\vec\theta) \\) 为高斯分布时的方差。
 		- 最简单情况： \\(\sigma^{2}\\) 是个常数，此时有解析解。方差的最大似然估计量就是 \\(\frac 1m \sum\_{i}(y_i-\mathbb E[y])^{2}\\)
 		- 在方差依赖于输入的情况下（对不同的 \\(\mathbf{\vec x}\\) 给出 \\(y\\) 的不同的方差），这种模型称作异方差模型。
 		- 在多维变量的情况下，最常见的是使用一个对角精度矩阵 \\(diag(\beta)\\)（它就是协方差矩阵的逆矩阵 \\(\mathbf{\Sigma}^{-1}\\)）。因为如果直接使用协方差矩阵，则涉及到除法、求逆运算。而精度矩阵则只涉及乘法、加法运算。
@@ -260,7 +260,7 @@
 	> 我们要学习的就是这三种参数。有报道说，基于梯度的优化算法对于混合条件高斯分布可能是不可靠的，部分原因是因为涉及到除法可能是数值不稳定的。一种解决方法是梯度截断，另一种方法是启发式梯度收缩。
 
 	下图给出了由一个混合高斯单元生成的样本。\\(x\\) 由均匀分布产生； \\(y\\) 由分布 \\(p\_{model}(y \mid x)\\) 产生，该分布是一个混合高斯分布，有三个高斯成分。
-	![mix_gaussian](../imgs/6/mix_gaussian.jpg)
+	![mix_gaussian](../imgs/6/mix_gaussian.PNG)
 	  
 4. 高斯混合输出在语音生成模型和物理运动中特别有效。	
 
@@ -407,8 +407,8 @@
 	- 选择深度模型承认了这样的一个先验知识：我们待学的函数应该是几个更加简单的函数的组合。
 	> 意味着：待学习的问题包含一组潜在的因子，这些因子可以根据更简单的潜在因子描述。
 	- 试验表明：更深的网络泛化性能更好。而仅仅增加参数的数量对于泛化性能几乎没有不起作用。下图分别表示：不同深度网络的泛化性能（测试集的准确率）、不同深度和参数的网络的泛化性能。
-	![deeper](../imgs/6/deeper.jpg)
-	![more_param](../imgs/6/more_param.jpg)
+	![deeper](../imgs/6/deeper.PNG)
+	![more_param](../imgs/6/more_param.PNG)
 2. 前面介绍的神经网络都是简单的以层为单位的链式结构，主要考虑网络的深度和每层的宽度。实践中，神经网络具有相当的多样性。
 	- 卷积神经网络是另一种特殊的结构
 	- 有时候，层不需要位于链中。有的神经网络构建了一条主链，然后又添加了额外的结构。如从层 \\(i\\)  连接到层 \\(i+2\\) ，这使得梯度更容易地从输出层流向输入端。
@@ -436,7 +436,7 @@
 
 	如下图就是 \\(\hat y=\sigma(\mathbf {\vec x}^{T}\mathbf {\vec w}+b)\\) 的计算图：
 
-	![compu_g](../imgs/6/compu_g.JPG)
+	![compu_g](../imgs/6/compu_g.PNG)
 
 3. 反向传播算法是一种计算利用链式法则计算微分的算法，它使用高效的、特定的运算顺序。
 	- 在一维的情况下，链式法则为： 
@@ -472,7 +472,17 @@
 		如果 \\(\mathbf Y=g(\mathbf X),z=f(\mathbf Y)\\)，则张量的链式法则为：
 		$$\nabla\_{\mathbf X} z=\sum\_{j}(\nabla\_{\mathbf X} \mathbf Y_j)\frac{\partial z}{\partial \mathbf Y_j} $$
 		其中 \\(j\\) 为张量  \\(\mathbf Y\\) 展平为一维向量后的索引
-
+		> 按照`numpy`的术语，假设 \\(\mathbf X\\) 代表数组 \\(X\\)，形状为 \\((l\_{1},l\_{2},\cdots,l\_{m})\\)，假设 \\(\mathbf Y\\) 代表数组 \\(Y\\)，形状为 \\((l\_{1}^{\prime},l\_{2}^{\prime},\cdots,l\_{n}^{\prime})\\)。则：
+		>
+		>- \\(\nabla\_{\mathbf X} z\\) 可以这些计算：
+			- 先将数组 \\(X\\) 展平为一维数组 \\(X^{\prime}\\)，其长度为 \\(l=l\_{1}\times l\_{2}\times\cdots\times l\_{m} \\)。该一维数组代表向量 \\(\mathbf{\vec x}^{\prime}\\)
+			- 然后求标量对向量的偏导数 :\\(\frac{\partial z}{\partial \mathbf{\vec x}^{\prime}}\\)
+			- 然后将结果`reshape`成形状 \\((l\_{1},l\_{2},\cdots,l\_{m})\\)
+		>
+		>  将数组 \\(Y\\) 展平为一维数组  \\(Y^{\prime}\\)，其长度为 \\(l^{\prime}=l^{\prime}\_{1}\times l\_{2}^{\prime}\times\cdots\times l^{\prime}\_{n} \\)。设一维数组各元素分别为 \\(y\_{1},y\_{2},\cdots,y\_{l^{\prime}}\\)
+		>		
+		> 于是$$\nabla\_{\mathbf X} z=\sum\_{j=0}^{l^{\prime}}  (\nabla\_{\mathbf X}y_j)  \frac{\partial z}{\partial  y_j} $$
+		 
 4. 给定计算图，以及计算图中的某个标量 \\(z\\) ，我们很容易地写出  \\(z\\) 对于产生  \\(z\\) 的任意节点的梯度的数学表达式。但是在计算该表达式的时候，需要额外考虑：许多子表达式可能在计算整个梯度表达式的过程中重复很多次。
 
 	下图中： \\(x=f(w),y=f(x),z=f(y)\\) ，我们计算 \\(\frac{dz}{dw}\\)：
@@ -481,10 +491,11 @@
 	=f^{\prime}(f(f(w)))f^{\prime}(f(w))f^{\prime}(w) $$
 	我们看到，如果采用 \\(f^{\prime}(y)f^{\prime}(x)f^{\prime}(w)\\)，则 \\(f(w)\\) 只需要计算一次（它存储于 \\(x \\) 中，这也是反向传播算法采用的方案）。另一种算法使用上式最后一个表达式，则 \\(f(w)\\) 被计算多次。
 
-	![compu_chain](../imgs/6/compu_chain.JPG)
+	![compu_chain](../imgs/6/compu_chain.PNG)
 
 	- 在复杂的计算图中，可能存在指数量级的重复子表达式。这使得原始的链式法则不可实现
 	- 有时候我们必须重复计算子表达式，这是通过以较高的运行时间为代价，来换取较少的内存开销
+
 
 ### 2. 反向传播计算梯度
 
@@ -496,7 +507,7 @@
 	- 假设每个非输入节点 \\(u_i\\) ，操作 \\(f_i\\) 与其关联，并且通过对该函数求值得到：
 		$$ u_i=f_i(\mathbb A_i)$$
 
-	![bp_forward](../imgs/6/bp_forward.JPG)
+	![bp_forward](../imgs/6/bp_forward.PNG)
 
 2. 我们先给出计算 \\(u_n\\) 的算法：
 	- 输入：
@@ -512,7 +523,7 @@
 
 3. 计算 \\(\frac{\partial u_n}{\partial u_i},i=1,2,\cdots,n_i\\) 时，我们需要构造另一张计算图 \\(\mathcal B\\)，它的节点与 \\(\mathcal G\\) 中完全相同，但是计算顺序完全相反。计算图 \\(\mathcal B\\) 如下图所示：
 
-	![bp_forward2](../imgs/6/bp_forward2.JPG)
+	![bp_forward2](../imgs/6/bp_forward2.PNG)
 
 	对于图中的任意一非输出节点 \\(u_j\\) （非 \\(u_n\\)），根据链式法则：
 	$$\frac{\partial u_n}{\partial u_j}=\sum\_{(\partial u_i,\partial u_j) \in  \mathcal B}\frac{\partial u_n}{\partial u_i}\frac{\partial u_i}{\partial u_j}  $$
@@ -546,13 +557,13 @@
 1. 对于一个全连接（每一层的输出都连接到下一层的所有单元）的深度前馈网络，我们给出其反向传播算法。
 
 	给定单个训练样例，我们定义损失函数为 \\(L(\hat{\mathbf{\vec y}},\mathbf{\vec y})\\)，其中 \\(\hat{\mathbf{\vec y}}\\) 为神经网络的预测值。考虑到正则化项，我们的损失函数为：
-	$$J(\theta)=L(\hat{\mathbf{\vec y}},\mathbf{\vec y})+\Omega(\theta) $$
-	其中 \\(\Omega(\theta)\\) 为正则化项，而 \\(\theta\\) 包含了所有的参数（包括每一层的权重 \\(\mathbf W_i\\) 和每一层的偏置 \\(\mathbf{\vec b}\_i\\)）。
-	> 如果给出一组训练样例 \\(\mathbb T\\)，那么损失函数为  \\(J(\theta)=[\sum\_{( \mathbf{\vec x} , \mathbf{\vec y} )\in \mathbb T}L(\hat{\mathbf{\vec y}},\mathbf{\vec y})]+\Omega(\theta) \\)
+	$$J(\vec\theta)=L(\hat{\mathbf{\vec y}},\mathbf{\vec y})+\Omega(\vec\theta) $$
+	其中 \\(\Omega(\vec\theta)\\) 为正则化项，而 \\(\vec\theta\\) 包含了所有的参数（包括每一层的权重 \\(\mathbf W_i\\) 和每一层的偏置 \\(\mathbf{\vec b}\_i\\)）。
+	> 如果给出一组训练样例 \\(\mathbb T\\)，那么损失函数为  \\(J(\vec\theta)=[\sum\_{( \mathbf{\vec x} , \mathbf{\vec y} )\in \mathbb T}L(\hat{\mathbf{\vec y}},\mathbf{\vec y})]+\Omega(\vec\theta) \\)
 
 	计算图如下：
 
-	![MLP_bp](../imgs/6/MLP_bp.jpg)
+	![MLP_bp](../imgs/6/MLP_bp.PNG)
 
 2. 首先我们给出计算代价函数的算法：
 	- 输入：
@@ -562,14 +573,14 @@
 		- 每一层的激活函数 \\(f_i(\cdot),i=1,2,\cdots,l\\)
 		>你也可以对所有的层使用同一个激活函数
 		- 输入 \\( \mathbf{\vec x}\\) 和对应的标记 \\(\mathbf{\vec y} \\)
-	- 输出：代价函数 \\(J(\theta)\\)
+	- 输出：代价函数 \\(J(\vec\theta)\\)
 	- 算法步骤：
 		- 初始化 \\(\mathbf{\vec h}\_0=\mathbf{\vec x}\\)
 		- 迭代：\\(k=1,2,\cdots,l\\)，计算：
 			-  \\(\mathbf{\vec a}\_k=\mathbf{\vec b}\_k+\mathbf W_k\mathbf{\vec h}\_{k-1}\\)
 			-  \\(\mathbf{\vec h}\_k=f\_k(\mathbf{\vec b}\_k) \\)
 		- \\(\hat{\mathbf{\vec y}}=\mathbf{\vec h}\_l\\)
-		- \\(J(\theta)=L(\hat{\mathbf{\vec y}},\mathbf{\vec y})+\Omega(\theta)\\) 
+		- \\(J(\vec\theta)=L(\hat{\mathbf{\vec y}},\mathbf{\vec y})+\Omega(\vec\theta)\\) 
 
 3. 然后我们给出计算深度前馈网络的梯度的算法：
 	- 输入：
@@ -587,15 +598,16 @@
 		- 迭代： \\(k=l,l-1,\cdots,1\\)，迭代步骤如下：
 			> 每轮迭代开始时， \\(\mathbf{\vec g}\\) 为 \\( \nabla\_{\mathbf{\vec h}\_k}J\\)
 
-			- \\(\mathbf{\vec g} \leftarrow \nabla\_{\mathbf{\vec a}\_k}J=\mathbf{\vec g} \odot f^{\prime}\_k(\mathbf{\vec a}\_k)\\)，其中 \\(\odot\\) 表示的并不是向量的点积，而是元素与对应元素的乘积。
-			>- 因为根据计算图， \\( \nabla\_{\mathbf{\vec a}\_k}J=(\nabla\_{\mathbf{\vec h}\_k}J )\frac{\partial \mathbf{\vec h}\_k}{\partial \mathbf{\vec a}\_k}\\) 。而根据深度前馈网络的性质有 \\(\mathbf{\vec h}\_k^{(i)}=f_k(\mathbf{\vec a}\_k^{(i)})\\) ， \\(\mathbf{\vec h}\_k^{(i)}\\) 为第 \\(i\\) 个分量。因此雅可比矩阵  \\(\frac{\partial \mathbf{\vec h}\_k}{\partial \mathbf{\vec a}\_k}\\) 为对角矩阵，对角线元素 \\([\frac{\partial \mathbf{\vec h}\_k}{\partial \mathbf{\vec a}\_k}]\_{i,i}=f^{\prime}\_k(\mathbf{\vec a}\_k^{(i)})\\)。因此 \\((\nabla\_{\mathbf{\vec h}\_k}J )\frac{\partial \mathbf{\vec h}\_k}{\partial \mathbf{\vec a}\_k}=(\nabla\_{\mathbf{\vec h}\_k}J )\odot f^{\prime}\_k(\mathbf{\vec a}\_k)\\)
+			- \\(\mathbf{\vec g} \leftarrow \nabla\_{\mathbf{\vec a}\_k}J=\mathbf{\vec g} \odot f^{\prime}\_k(\mathbf{\vec a}\_k)\\)，其中 \\(\odot\\) 表示`Hadamard`积。
+			>- 因为根据计算图， \\( \nabla\_{\mathbf{\vec a}\_k}J=(\frac{\partial \mathbf{\vec h}\_k}{\partial \mathbf{\vec a}\_k})^{T}\nabla\_{\mathbf{\vec h}\_k}J  \\) 。而根据深度前馈网络的性质有 \\(\mathbf{\vec h}\_k^{(i)}=f_k(\mathbf{\vec a}\_k^{(i)})\\) ， \\(\mathbf{\vec h}\_k^{(i)}\\) 为第 \\(i\\) 个分量。因此雅可比矩阵  \\(\frac{\partial \mathbf{\vec h}\_k}{\partial \mathbf{\vec a}\_k}\\) 为对角矩阵，对角线元素 \\([\frac{\partial \mathbf{\vec h}\_k}{\partial \mathbf{\vec a}\_k}]\_{i,i}=f^{\prime}\_k(\mathbf{\vec a}\_k^{(i)})\\)。因此 \\((\frac{\partial \mathbf{\vec h}\_k}{\partial \mathbf{\vec a}\_k})^{T}\nabla\_{\mathbf{\vec h}\_k}J =(\nabla\_{\mathbf{\vec h}\_k}J )\odot f^{\prime}\_k(\mathbf{\vec a}\_k)\\)
 			>
 			> - 此时 \\(\mathbf{\vec g}\\) 为 \\( \nabla\_{\mathbf{\vec a}\_k}J\\)
 			- 计算对权重和偏置的偏导数：
-			$$\nabla\_{\mathbf{\vec b}\_k}J=\mathbf{\vec g}+\lambda \nabla\_{\mathbf{\vec b}\_k}\Omega(\theta)\\\
-			\nabla\_{\mathbf W\_k}J=\mathbf{\vec g} \mathbf{\vec h}^{T}\_{k-1}+\lambda \nabla\_{\mathbf W\_k}\Omega(\theta)
+			$$\nabla\_{\mathbf{\vec b}\_k}J=\mathbf{\vec g}+\lambda \nabla\_{\mathbf{\vec b}\_k}\Omega(\vec\theta)\\\
+			\nabla\_{\mathbf W\_k}J=\mathbf{\vec g} \mathbf{\vec h}^{T}\_{k-1}+\lambda \nabla\_{\mathbf W\_k}\Omega(\vec\theta)
 			$$
-			> 因为 \\(\mathbf{\vec a}\_k=\mathbf{\vec b}\_k+\mathbf W_k\mathbf{\vec h}\_{k-1}\\)，因此 \\(\nabla\_{\mathbf{\vec b}\_k}J=\nabla\_{\mathbf{\vec a}\_k}J,\nabla\_{\mathbf W\_k}J=(\nabla\_{\mathbf{\vec a}\_k}J) \mathbf{\vec h}^{T}\_{k-1}\\)，考虑到代价函数中的正则化项包含了权重和偏置，因此需要增加正则化项的梯度。
+			> 因为 \\(\mathbf{\vec a}\_k=\mathbf{\vec b}\_k+\mathbf W_k\mathbf{\vec h}\_{k-1}\\)，因此 $$\nabla\_{\mathbf{\vec b}\_k}J=\nabla\_{\mathbf{\vec a}\_k}J\\\
+\nabla\_{\mathbf W\_k}J=(\nabla\_{\mathbf{\vec a}\_k}J) \mathbf{\vec h}^{T}\_{k-1}$$ 考虑到代价函数中的正则化项包含了权重和偏置，因此需要增加正则化项的梯度。
 			- 梯度传播：
 			$$\mathbf{\vec g}\leftarrow \nabla\_{\mathbf{\vec h}\_{k-1}}J=\mathbf W\_k^{T}\mathbf{\vec g}$$
 			>- 因为 \\(\mathbf{\vec a}\_k=\mathbf{\vec b}\_k+\mathbf W_k\mathbf{\vec h}\_{k-1}\\)，因此 \\(\nabla\_{\mathbf{\vec h}\_{k-1}}J=\mathbf W_k^{T} \nabla\_{\mathbf{\vec a}\_k}J\\)
@@ -620,7 +632,7 @@
 
 	下图左侧为 \\(z=f(f(f(w)))\\) 的计算图。右侧添加了若干节点从而给出了计算 \\(\frac{dz}{dw}\\) 的计算图。
 
-	![symbol_symbol](../imgs/6/symbol_symbol.JPG)
+	![symbol_symbol](../imgs/6/symbol_symbol.PNG)
 
 ### 5. 通用反向传播算法
 
@@ -637,7 +649,8 @@
 			其中 \\(\text{inputs}\\) 为 \\(\mathbf V\\)  的父节点集合
 			- 该操作对象有个`bprop`方法。给定 \\(\mathbf V\\) 的某个子节点 \\(\mathbf C\\)，该方法用于已知  \\(\mathbf C\\) 的梯度，求解  \\(\mathbf C\\) 对于 \\(\mathbf V\\) 的梯度的贡献：
 			$$ \text{op.bprop}(\text{inputs},\mathbf V,\mathbf G)= (\nabla\_{\mathbf V}\text{op}.f (\text{inputs}) )\mathbf G$$
-			其中 \\(\text{inputs}\\) 为 \\(\mathbf C\\)  的父节点集合（其父节点可能不止 \\(\mathbf V\\) 一个）， \\(\mathbf G=\nabla\_{\mathbf C}z \\) 。 它就等于张量链式法则右侧的： \\((\nabla\_{\mathbf X} \mathbf Y_j)\frac{\partial z}{\partial \mathbf Y_j} \\)
+			其中 \\(\text{inputs}\\) 为 \\(\mathbf C\\)  的父节点集合（其父节点可能不止 \\(\mathbf V\\) 一个）， \\(\mathbf G=\nabla\_{\mathbf C}z \\) 。 
+			>它就等于张量链式法则右侧的： \\((\nabla\_{\mathbf X} \mathbf Y_j)\frac{\partial z}{\partial \mathbf Y_j} \\) 的属于 \\(\mathbf C\\) 的部分和
 	- \\(\text{get_consumers}(\mathbf V,\mathcal G)\\)：返回图 \\(\mathcal G\\) 中节点 \\(\mathbf V\\) 的子节点列表
 		> 也就是节点 \\(\mathbf V\\) 的子节点集合为 \\(\mathbb C\_{\mathbf V}^{(\mathcal G)}\\)
 	- \\(\text{get_inputs}(\mathbf V,\mathcal G)\\)：返回图 \\(\mathcal G\\) 中节点 \\(\mathbf V\\) 的父节点列表
@@ -666,7 +679,7 @@
 		- 结构表  \\(\text{grad_table})\\)
 	- 输出： \\(\nabla\_{\mathbf V} z\\)
 	- 算法步骤：
-		- 如果 \\(\mathbf V\\) 已经就在 \\(\text{grad_table}\\) 中，则直接返回 \\(\text{grad_table}\\)
+		- 如果 \\(\mathbf V\\) 已经就在 \\(\text{grad_table}\\) 中，则直接返回 \\(\text{grad_table}[\mathbf V]\\)
 		- \\(i=1\\) （它用于标记不同的子节点的贡献而已）
 		- 在图  \\(\mathcal G^{\prime}\\) 中， 遍历 \\(\mathbf V\\) 的子节点的集合 \\(\mathbb C\_{\mathbf V}^{(\mathcal G^{\prime})}\\) ，遍历过程为 \\(\text{for} \;\mathbf C \;\text{in}\; \text{get_consumers}(\mathbf V,\mathcal G^{\prime})\\)：
 			- 获取计算 \\(\mathbf C\\) 的操作： \\(\text{op}=\text{get_operation}(\mathbf C)\\)
@@ -695,7 +708,7 @@
 	> 实际上每个操作可能包含多个算术运算，如我们将矩阵乘法视为单个操作的话，就包含了很多乘法和加法。因此，每个操作的运行时间实际上变化非常大。
 
 	- 在具有 \\(n\\) 个节点的图中计算梯度，不会执行超过 \\(O(n^{2})\\) 的操作；也不会执行超过 \\(O(n^{2})\\) 个存储。因为最坏的情况下，前向传播将遍历执行图中的全部 \\(n\\) 个节点
-	- 大多数神经网络的代价函数的计算图是链式结构，因此不会执行超过 \\(O(n\\) 的操作。
+	- 大多数神经网络的代价函数的计算图是链式结构，因此不会执行超过 \\(O(n)\\) 的操作。
 	- 如果直接梯度计算公式来求解，则会产生大量的重复子表达式，导致指数级的运行时间。通用反向传播算法是一种表填充算法，利用存储中间结果（存储子节点的梯度） 来对表进行填充。
 		- 图中的每个节点对应了表中的一个位置，该位置存储的就是该节点的梯度。
 		- 通过顺序填充这些表的条目，反向传播算法避免了重复计算公共表达式。这种策略也称作动态规划。
@@ -707,12 +720,12 @@
 	> 假设我们的语言包含了 `relu`操作，该操作能够对 \\(\mathbf H=\max\\{0,\mathbf Z\\}\\) 进行逐元素运算。
 	- 假设分类的非归一化对数概率由 \\(\mathbf H\mathbf W_2\\) 给出（这里我们同样忽略偏置），其中 \\(\mathbf W_2\\) 为隐层的到输出层的权重矩阵。
 	- 假设我们的语言包含了`cross_entropy`操作，用于计算未归一化对数概率分布定义交叉熵 ，该交叉熵作为代价函数 \\(J\_{MLE}\\)
-	>交叉熵为  $$J(\theta)=-\mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}} \log p\_{model}(y\mid \mathbf{\vec x};\theta)  $$最小化交叉熵就是最大化似然估计
+	>交叉熵为  $$J(\vec\theta)=-\mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}} \log p\_{model}(y\mid \mathbf{\vec x};\vec\theta)  $$最小化交叉熵就是最大化似然估计
 	- 引入正则化项，总的代价函数为：
 	$$J= J\_{MLE}+\lambda\left(\sum\_{i,j}(\mathbf W\_1[i,j])^{2}+\mathbf W\_2[i,j])^{2}\right)$$
 
 	其计算图如下所示：
-	![forward_learn](../imgs/6/forward_learn.jpg)
+	![forward_learn](../imgs/6/forward_learn.PNG)
 
 2. 我们的目标是通过小批量随机梯度下降法求解代价函数的最小值。因此需要计算 \\(\nabla\_{\mathbf W_1}J,\nabla\_{\mathbf W_2}J\\)。从图中看出，有两种不同的路径从 \\(J\\) 回退到 \\(\mathbf W\_1,\mathbf W_2\\)：
 	- 一条路径是：通过正则化项。这条路径对于梯度的贡献相对简单，它对于 \\(\mathbf W_i\\) 的梯度贡献为 \\(2\lambda \mathbf W_i\\)

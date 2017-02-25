@@ -14,22 +14,22 @@
 	- 在实际的深度学习场景中，最好的拟合模型（基于最小泛化误差）是一个适当正则化的大型模型
 
 ##二、 参数范数正则化
-1. 一些正则化方法通过对目标函数 \\(J\\) 添加一个参数范数正则化项 \\(\Omega(\theta)\\) 来限制模型的容量`capacity` 。正则化之后的目标函数为 \\(\tilde J\\)：
-	$$ \tilde J(\theta;\mathbf X,\mathbf{\vec y})= J(\theta;\mathbf X,\mathbf{\vec y})+\alpha \Omega(\theta)$$ 
-	- \\(\alpha \in [0,\infty)\\) 为正则化项的系数。它衡量正则化项 \\(\Omega(\theta)\\) 和标准目标函数 \\(J\\) 的比重。
+1. 一些正则化方法通过对目标函数 \\(J\\) 添加一个参数范数正则化项 \\(\Omega(\vec\theta)\\) 来限制模型的容量`capacity` 。正则化之后的目标函数为 \\(\tilde J\\)：
+	$$ \tilde J(\vec\theta;\mathbf X,\mathbf{\vec y})= J(\vec\theta;\mathbf X,\mathbf{\vec y})+\alpha \Omega(\vec\theta)$$ 
+	- \\(\alpha \in [0,\infty)\\) 为正则化项的系数。它衡量正则化项 \\(\Omega(\vec\theta)\\) 和标准目标函数 \\(J\\) 的比重。
 		- \\(\alpha=0\\) 则没有正则化
 		- \\(\alpha\\) 越大，则正则化项越重要
-	- 如果最小化 \\(\tilde J\\)，则会同时降低 \\(J\\) 和参数 \\(\theta\\) 的规模
+	- 如果最小化 \\(\tilde J\\)，则会同时降低 \\(J\\) 和参数 \\(\vec\theta\\) 的规模
 
 2. 选择不同的 \\(\Omega\\)   的形式会产生不同的解。常见的有 \\(L\_2\\) 正则化和 \\(L\_1\\)  正则化
 
 ### 1. L2 正则化
 
 1.  \\(L\_2\\) 正则化通常被称作岭回归或者`Tikhonov`正则化。
-	- 正则化项为 \\(\Omega(\theta)=\frac 12|| \theta||\_2^{2}\\)。系数 \\(\frac 12\\) 是为了使得导数的系数为 1.
-	- 该正则化形式倾向于使得参数 \\(\theta\\) 更接近零
+	- 正则化项为 \\(\Omega(\vec\theta)=\frac 12|| \vec\theta||\_2^{2}\\)。系数 \\(\frac 12\\) 是为了使得导数的系数为 1.
+	- 该正则化形式倾向于使得参数 \\(\vec\theta\\) 更接近零
 
-2. 假设 \\(\theta\\) 参数就是权重 \\(\mathbf{\vec w}\\)，没有偏置参数。则：
+2. 假设 \\(\vec\theta\\) 参数就是权重 \\(\mathbf{\vec w}\\)，没有偏置参数。则：
 	$$\tilde J(\mathbf{\vec w};\mathbf X,\mathbf{\vec y})=J(\mathbf{\vec w};\mathbf X,\mathbf{\vec y})+\frac {\alpha}{2}\mathbf{\vec w}^{T}\mathbf{\vec w}$$
 	对应的梯度为
 	$$\nabla\_{\mathbf{\vec w}}\tilde J(\mathbf{\vec w};\mathbf X,\mathbf{\vec y})=\nabla\_{\mathbf{\vec w}} J(\mathbf{\vec w};\mathbf X,\mathbf{\vec y})+\alpha \mathbf{\vec w}$$
@@ -83,7 +83,7 @@
 	>- 因为沿着水平方向，一个较大的偏移只会对 \\(J\\) 产生一个较小的变化。因此正则化项倾向于从  \\( \mathbf{\vec w} ^{\*}\\) 点水平移动
 	>- 曲率半径是曲率的导数。对于椭圆 \\(\frac{w_1^{2}}{a^{2}}+\frac{w_2^{2}}{b^{2}}=1\\)，上下顶点的曲率半径为 \\(\frac{a^{2}}{b}\\)，左右顶点的曲率半径为 \\(\frac{b^{2}}{a}\\)。海森矩阵的特征值为 \\(\lambda_1= \frac{2}{a^{2}},\lambda_2= \frac{2}{b^{2}}\\)
 
-	![L2](../imgs/7/L2.jpg)
+	![L2](../imgs/7/L2.PNG)
 
 6. \\(L_2\\) 正则化告诉我们：
 	- 只有显著减小目标函数 \\(J\\) 的那个方向的参数会相对保留下来
@@ -103,7 +103,7 @@
 
 ### 2. L1 正则化
 1. 模型参数 \\(\mathbf{\vec w}\\) 的 \\(L_1\\) 的正则化形式为：
-	$$\Omega(\theta)=||\mathbf{\vec w}||\_1=\sum\_{i}|w_i| $$
+	$$\Omega(\vec\theta)=||\mathbf{\vec w}||\_1=\sum\_{i}|w_i| $$
 	即各个参数的绝对值之和。
 	 
 2. \\(L_1\\)  正则化后的目标函数 \\(\tilde J(\mathbf{\vec w};\mathbf X,\mathbf{\vec y})\\)：
@@ -153,7 +153,7 @@
 	> 著名的`LASSO`模型将 \\(L_1\\) 正则化和线性模型结合，使用最小平方误差作为代价函数。
 
 5. 许多正则化策略可以被解释为最大后验估计`MAP`贝叶斯推断：
-	$$\theta\_{MAP} =\arg\max\_{\theta}p(\theta\mid \mathbf{\vec x})=\arg\max\_{\theta}p(\mathbf{\vec x} \mid \theta )+\log p(\theta)$$
+	$$\vec\theta\_{MAP} =\arg\max\_{\vec\theta}p(\vec\theta\mid \mathbf{\vec x})=\arg\max\_{\vec\theta}p(\mathbf{\vec x} \mid \vec\theta )+\log p(\vec\theta)$$
 	>最大化后验估计等价于最小化代价函数
 
 	-  \\(L_2\\) 正则化项：参数的先验分布为高斯分布：
@@ -168,25 +168,25 @@
 ## 三、 约束最优化正则化 
 1. 我们可以通过添加一个约束来实现正则化：
 	$$
-	\min\_{\theta} J(\theta;\mathbf X,\mathbf{\vec y})\\\
-	st.\quad \Omega(\theta) \lt k
+	\min\_{\vec\theta} J(\vec\theta;\mathbf X,\mathbf{\vec y})\\\
+	st.\quad \Omega(\vec\theta) \lt k
 	$$
 	其中 \\(k\\) 为一个常数。 我们构建广义拉格朗日函数： 
-	$$\mathcal L(\theta,\alpha)=J(\theta)+\alpha(\Omega(\theta) - k)$$ 
+	$$\mathcal L(\vec\theta,\alpha)=J(\vec\theta)+\alpha(\Omega(\vec\theta) - k)$$ 
 	则上述约束最优化问题的解由下式给出：
-	$$ \theta^{\*}=\arg\min\_{\theta}\max\_{\alpha,\alpha\gt 0}\mathcal L(\theta,\alpha)$$
+	$$ \vec\theta^{\*}=\arg\min\_{\vec\theta}\max\_{\alpha,\alpha\gt 0}\mathcal L(\vec\theta,\alpha)$$
 	- 假设 \\(\alpha\\) 的解为 \\(\alpha^{\*}\\)，固定 \\(\alpha^{\*}\\) 则：
-		$$\theta^{\*}=\arg\min\_{\theta}J(\theta)+\alpha^{\*}\Omega(\theta) $$
+		$$\vec\theta^{\*}=\arg\min\_{\vec\theta}J(\vec\theta)+\alpha^{\*}\Omega(\vec\theta) $$
 		这和最小化 \\(\tilde J\\) 的正则化是相同的。因此我们可以将参数范数正则化视为对参数强加的约束
 		- 如果 \\(\Omega\\) 是 \\(L\_2\\) 范数，则权重就是被约束在一个 \\(L\_2\\) 球中
 		- 如果 \\(\Omega\\) 是 \\(L\_1\\) 范数，则权重就是被约束在一个 \\(L\_1\\) 限制的区间中
 
 2. 有时候我们可以使用显式的约束（而不是使用正则化项）。此时可以修改梯度下降算法：
-	- 首先计算 \\(J(\theta)\\) 的下降步
-	- 然后将 \\(\theta\\) 投影到满足 \\(\Omega(\theta) \lt k\\) 的最近点
+	- 首先计算 \\(J(\vec\theta)\\) 的下降步
+	- 然后将 \\(\vec\theta\\) 投影到满足 \\(\Omega(\vec\theta) \lt k\\) 的最近点
 
 3. 使用重投影的显式的限制而不是使用正则化项有两个好处：
-	-  采用正则化项后，当 \\(\theta\\) 较小时，容易使得非凸优化的过程陷入局部极小值。考虑当训练神经网络时，训练带有几个“死单元”的神经网络。这些死单元不会对网络学到的函数有太大的贡献。
+	-  采用正则化项后，当 \\(\vec\theta\\) 较小时，容易使得非凸优化的过程陷入局部极小值。考虑当训练神经网络时，训练带有几个“死单元”的神经网络。这些死单元不会对网络学到的函数有太大的贡献。
 		- 当使用权重范数的正则化时，较小的权重可能是局部最优的
 		- 当使用显式的限制时，算法不鼓励权重接近原点，因此工作的较好
 
@@ -194,7 +194,7 @@
 		- 较大的权重产生了较大的梯度
 		- 较大的梯度诱发权重的更大的更新
 
-		如果这些更新持续增加了权重的大小，则 \\(\theta\\) 就会迅速增大，直到溢出。显式的限制可以防止这种反馈环引起的权重的无限制持续增加。
+		如果这些更新持续增加了权重的大小，则 \\(\vec\theta\\) 就会迅速增大，直到溢出。显式的限制可以防止这种反馈环引起的权重的无限制持续增加。
 	 
 4. `Srebro and Shraibman`对于神经网络引入的正则化策略为：约束神经网络的权重矩阵每列的范数，而不是限制整个权重矩阵的`Frobenius`范数。
 	- 分别限制每一列的范数可以防止某一个隐单元有非常大的权重
@@ -253,43 +253,43 @@
 	- 另一种策略是：将噪音作用于权重。这也是一种正则化策略。这项技术主要用于循环神经网络。
 		- 这种做法可以解释为一个关于权重的贝叶斯推断的随机实现。贝叶斯处理的训练过程将权重视作不确定的随机变量（拥有某个概率分布）。向权重注入噪声是对该随机变量采样得到的一个随机值。
 
-2. 在某些假设下，将噪声注入权重等价于传统的正则化形式。假设我们有一个 \\(l\\) 层的标准的深度前馈神经网络，我们将噪声注入到该网络的权重。我们假设  \\( p\_{model}(y\mid \mathbf{\vec x};\theta)=\mathcal N(y;f(\mathbf{\vec x};\theta),\mathbf I)\\) ，则有：
+2. 在某些假设下，将噪声注入权重等价于传统的正则化形式。假设我们有一个 \\(l\\) 层的标准的深度前馈神经网络，我们将噪声注入到该网络的权重。我们假设  \\( p\_{model}(y\mid \mathbf{\vec x};\vec\theta)=\mathcal N(y;f(\mathbf{\vec x};\vec\theta),\mathbf I)\\) ，则有：
 
-	$$J(\theta)=-\mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}} \log p\_{model}(y\mid \mathbf{\vec x};\theta)\\\
-	=\frac 12 \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}}||y-f(\mathbf{\vec x};\theta)||^{2}+\text{const} 
+	$$J(\vec\theta)=-\mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}} \log p\_{model}(y\mid \mathbf{\vec x};\vec\theta)\\\
+	=\frac 12 \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}}||y-f(\mathbf{\vec x};\vec\theta)||^{2}+\text{const} 
 	  $$
 
-	常数项包含了高斯分布的方差（与 \\(\theta\\) 无关）。 于是重写为：
-	$$J(\theta)=\frac 12 \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}}||y-f(\mathbf{\vec x};\theta)||^{2} $$
+	常数项包含了高斯分布的方差（与 \\(\vec\theta\\) 无关）。 于是重写为：
+	$$J(\vec\theta)=\frac 12 \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}}||y-f(\mathbf{\vec x};\vec\theta)||^{2} $$
 	
-	假设每个权重添加一个随机扰动 \\(\epsilon\_{\mathbf W}\sim \mathcal N(\epsilon;\mathbf{\vec 0},\eta\mathbf I)\\)。假设添加扰动之后的模型为 \\( \tilde p\_{model}(y\mid \mathbf{\vec x};\theta,\epsilon\_{\mathbf W})=\mathcal N(y;\tilde f(\mathbf{\vec x};\theta,\epsilon\_{\mathbf W}),\mathbf I)\\)。我们假设有  \\(\mathbb E\_{p(\epsilon\_{\mathbf W})}  \tilde f(\mathbf{\vec x};\theta,\epsilon\_{\mathbf W})=f(\mathbf{\vec x};\theta)\\)
+	假设每个权重添加一个随机扰动 \\(\epsilon\_{\mathbf W}\sim \mathcal N(\epsilon;\mathbf{\vec 0},\eta\mathbf I)\\)。假设添加扰动之后的模型为 \\( \tilde p\_{model}(y\mid \mathbf{\vec x};\vec\theta,\epsilon\_{\mathbf W})=\mathcal N(y;\tilde f(\mathbf{\vec x};\vec\theta,\epsilon\_{\mathbf W}),\mathbf I)\\)。我们假设有  \\(\mathbb E\_{p(\epsilon\_{\mathbf W})}  \tilde f(\mathbf{\vec x};\vec\theta,\epsilon\_{\mathbf W})=f(\mathbf{\vec x};\vec\theta)\\)
 
 	于是：
-	$$\tilde J(\theta)=\frac 12 \mathbb E\_{p(\mathbf{\vec x},y,\epsilon\_{\mathbf W})}||y-\tilde f(\mathbf{\vec x};\theta,\epsilon\_{\mathbf W})||^{2} \\\
-	=\mathbb E\_{p(\epsilon\_{\mathbf W})}\left[\frac 12 \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}}||y-\tilde f(\mathbf{\vec x};\theta,\epsilon\_{\mathbf W})||^{2}\right]\\\
-	= \frac 12\mathbb E\_{p(\epsilon\_{\mathbf W})} \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}}||y-f(\mathbf{\vec x};\theta)+f(\mathbf{\vec x};\theta)-\tilde f(\mathbf{\vec x};\theta,\epsilon\_{\mathbf W})||^{2}\\\
-	=\frac 12\mathbb E\_{p(\epsilon\_{\mathbf W})} \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}}\left[(y-f(\mathbf{\vec x};\theta))^{2}+(f(\mathbf{\vec x};\theta)-\tilde f(\mathbf{\vec x};\theta,\epsilon\_{\mathbf W}))^{2}+\\\2(y-f(\mathbf{\vec x};\theta))(f(\mathbf{\vec x};\theta)-\tilde f(\mathbf{\vec x};\theta,\epsilon\_{\mathbf W}))\right]\\\
-	=\frac 12\mathbb E\_{p(\epsilon\_{\mathbf W})} \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}} (y-f(\mathbf{\vec x};\theta))^{2}+\frac 12\mathbb E\_{p(\epsilon\_{\mathbf W})} \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}}(f(\mathbf{\vec x};\theta)-\tilde f(\mathbf{\vec x};\theta,\epsilon\_{\mathbf W}))^{2}\\\
-	+\mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}}(y-f(\mathbf{\vec x};\theta))\mathbb E\_{p(\epsilon\_{\mathbf W})} (f(\mathbf{\vec x};\theta)-\tilde f(\mathbf{\vec x};\theta,\epsilon\_{\mathbf W}))
+	$$\tilde J(\vec\theta)=\frac 12 \mathbb E\_{p(\mathbf{\vec x},y,\epsilon\_{\mathbf W})}||y-\tilde f(\mathbf{\vec x};\vec\theta,\epsilon\_{\mathbf W})||^{2} \\\
+	=\mathbb E\_{p(\epsilon\_{\mathbf W})}\left[\frac 12 \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}}||y-\tilde f(\mathbf{\vec x};\vec\theta,\epsilon\_{\mathbf W})||^{2}\right]\\\
+	= \frac 12\mathbb E\_{p(\epsilon\_{\mathbf W})} \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}}||y-f(\mathbf{\vec x};\vec\theta)+f(\mathbf{\vec x};\vec\theta)-\tilde f(\mathbf{\vec x};\vec\theta,\epsilon\_{\mathbf W})||^{2}\\\
+	=\frac 12\mathbb E\_{p(\epsilon\_{\mathbf W})} \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}}\left[(y-f(\mathbf{\vec x};\vec\theta))^{2}+(f(\mathbf{\vec x};\vec\theta)-\tilde f(\mathbf{\vec x};\vec\theta,\epsilon\_{\mathbf W}))^{2}+\\\2(y-f(\mathbf{\vec x};\vec\theta))(f(\mathbf{\vec x};\vec\theta)-\tilde f(\mathbf{\vec x};\vec\theta,\epsilon\_{\mathbf W}))\right]\\\
+	=\frac 12\mathbb E\_{p(\epsilon\_{\mathbf W})} \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}} (y-f(\mathbf{\vec x};\vec\theta))^{2}+\frac 12\mathbb E\_{p(\epsilon\_{\mathbf W})} \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}}(f(\mathbf{\vec x};\vec\theta)-\tilde f(\mathbf{\vec x};\vec\theta,\epsilon\_{\mathbf W}))^{2}\\\
+	+\mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}}(y-f(\mathbf{\vec x};\vec\theta))\mathbb E\_{p(\epsilon\_{\mathbf W})} (f(\mathbf{\vec x};\vec\theta)-\tilde f(\mathbf{\vec x};\vec\theta,\epsilon\_{\mathbf W}))
 	$$
 	根据：
-	 $$\frac 12\mathbb E\_{p(\epsilon\_{\mathbf W})} \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}} (y-f(\mathbf{\vec x};\theta))^{2}=\frac 12 \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}} (y-f(\mathbf{\vec x};\theta))^{2} =J(\theta)$$
-	$$ \mathbb E\_{p(\epsilon\_{\mathbf W})} (f(\mathbf{\vec x};\theta)-\tilde f(\mathbf{\vec x};\theta,\epsilon\_{\mathbf W}))=f(\mathbf{\vec x};\theta)-\mathbb E\_{p(\epsilon\_{\mathbf W})}\tilde f(\mathbf{\vec x};\theta,\epsilon\_{\mathbf W})=0 $$
+	 $$\frac 12\mathbb E\_{p(\epsilon\_{\mathbf W})} \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}} (y-f(\mathbf{\vec x};\vec\theta))^{2}=\frac 12 \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}} (y-f(\mathbf{\vec x};\vec\theta))^{2} =J(\vec\theta)$$
+	$$ \mathbb E\_{p(\epsilon\_{\mathbf W})} (f(\mathbf{\vec x};\vec\theta)-\tilde f(\mathbf{\vec x};\vec\theta,\epsilon\_{\mathbf W}))=f(\mathbf{\vec x};\vec\theta)-\mathbb E\_{p(\epsilon\_{\mathbf W})}\tilde f(\mathbf{\vec x};\vec\theta,\epsilon\_{\mathbf W})=0 $$
 	于是有：
-	$$\tilde J(\theta)= J(\theta)+\frac 12\mathbb E\_{p(\epsilon\_{\mathbf W})} \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}}(f(\mathbf{\vec x};\theta)-\tilde f(\mathbf{\vec x};\theta,\epsilon\_{\mathbf W}))^{2}+0$$
+	$$\tilde J(\vec\theta)= J(\vec\theta)+\frac 12\mathbb E\_{p(\epsilon\_{\mathbf W})} \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}}(f(\mathbf{\vec x};\vec\theta)-\tilde f(\mathbf{\vec x};\vec\theta,\epsilon\_{\mathbf W}))^{2}+0$$
 
 	我们将  \\(\tilde f\\) 在 \\(\mathbf W\\) 处泰勒展开，有：
-	$$\tilde f(\mathbf{\vec x};\theta,\epsilon\_{\mathbf W})=f(\mathbf{\vec x};\theta)+\nabla\_{\mathbf W}f(\mathbf{\vec x};\theta)^{T} \epsilon\_{\mathbf W}$$
+	$$\tilde f(\mathbf{\vec x};\vec\theta,\epsilon\_{\mathbf W})=f(\mathbf{\vec x};\vec\theta)+\nabla\_{\mathbf W}f(\mathbf{\vec x};\vec\theta)^{T} \epsilon\_{\mathbf W}$$
 	则有：
-	$$\mathbb E\_{p(\epsilon\_{\mathbf W})} [ (\tilde f(\mathbf{\vec x};\theta,\epsilon\_{\mathbf W})-f(\mathbf{\vec x};\theta))^{2}]=\mathbb E\_{p(\epsilon\_{\mathbf W})}(\nabla\_{\mathbf W}f(\mathbf{\vec x};\theta) ^{T}\epsilon\_{\mathbf W})^{2}=||\nabla\_{\mathbf W}f(\mathbf{\vec x};\theta)||^{2}\eta $$
+	$$\mathbb E\_{p(\epsilon\_{\mathbf W})} [ (\tilde f(\mathbf{\vec x};\vec\theta,\epsilon\_{\mathbf W})-f(\mathbf{\vec x};\vec\theta))^{2}]=\mathbb E\_{p(\epsilon\_{\mathbf W})}(\nabla\_{\mathbf W}f(\mathbf{\vec x};\vec\theta) ^{T}\epsilon\_{\mathbf W})^{2}=||\nabla\_{\mathbf W}f(\mathbf{\vec x};\vec\theta)||^{2}\eta $$
 	于是有：
-	$$\tilde J(\theta)= J(\theta)+\frac {\eta }{2} \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}}[||\nabla\_{\mathbf W}f(\mathbf{\vec x};\theta)||^{2}]  $$
-	则得出结论：权重噪声注入的代价函数等于非权重噪声注入的代价函数加上一个正则化项。该正则化项就是 \\(\frac {\eta }{2} \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}}[||\nabla\_{\mathbf W}f(\mathbf{\vec x};\theta)||^{2}  ]\\)，其中 \\(\eta\\) 为噪声的方差。
+	$$\tilde J(\vec\theta)= J(\vec\theta)+\frac {\eta }{2} \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}}[||\nabla\_{\mathbf W}f(\mathbf{\vec x};\vec\theta)||^{2}]  $$
+	则得出结论：权重噪声注入的代价函数等于非权重噪声注入的代价函数加上一个正则化项。该正则化项就是 \\(\frac {\eta }{2} \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}}[||\nabla\_{\mathbf W}f(\mathbf{\vec x};\vec\theta)||^{2}  ]\\)，其中 \\(\eta\\) 为噪声的方差。
 	- 该形式的正则化将鼓励参数进入对小扰动不敏感的区域。即：找到的点不仅是极小点，还是由平坦区域包围的极小点。
 	> 平坦区域意味着梯度很小，意味着对小扰动不敏感。
 
-3. 如果是简单的线性回归，即 \\(f(\mathbf{\vec x};\theta)=\mathbf{\vec w}^{T}\mathbf{\vec x}+b\\)，则正则化项退化为 \\(\frac {\eta }{2} \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}}[|| \mathbf{\vec x}||^{2} ]\\)
-	- 该正则化项与模型的参数无关，因此对  \\(\tilde J(\theta)\\) 关于 \\(\mathbf W\\) 的梯度没有贡献。
+3. 如果是简单的线性回归，即 \\(f(\mathbf{\vec x};\vec\theta)=\mathbf{\vec w}^{T}\mathbf{\vec x}+b\\)，则正则化项退化为 \\(\frac {\eta }{2} \mathbb E\_{\mathbf{\vec x},y\sim \hat p\_{data}}[|| \mathbf{\vec x}||^{2} ]\\)
+	- 该正则化项与模型的参数无关，因此对  \\(\tilde J(\vec\theta)\\) 关于 \\(\mathbf W\\) 的梯度没有贡献。
 
 4. 有些数据集的部分数目的 \\(y\\) 标签是错误的，此时通过最大似然准则来最大化 \\(\sum \log p(y\mid \mathbf{\vec x})\\) 是不正确的。一种解决方案是，显式地对标签上的噪音进行建模：	假设某些很小的常数 \\(\epsilon\\)， 标签 \\(y\\) 为正确的概率为 \\(1-\epsilon\\) 。
 
@@ -319,7 +319,7 @@
 
 5. 从深度学习的观点看，多任务学习刻画了一个先验知识：这些不同的任务中，能解释数据变化的因子是跨任务共享的
 
-	![mul_task](../imgs/7/mul_task.JPG)
+	![mul_task](../imgs/7/mul_task.PNG)
 
 ## 八、 早停
 ### 1. 早停算法
@@ -327,7 +327,7 @@
 1. 当训练一个有足够的表达能力的大模型时，我们会经常发现：训练误差会逐渐降低，但是验证集的误差先下降后上升！
 	- 我们可以返回使得验证集误差最低的参数。因此我们每次需要存储模型参数；当训练算法终止时，返回的不是最新的参数，而是验证集误差最小的参数。
 
-	![train_validate](../imgs/7/train_validate.JPG)
+	![train_validate](../imgs/7/train_validate.PNG)
 
 2. 当验证集上的误差没有进一步改善时，算法就提前终止。这种策略被称作早停`early stopping`。
 	- 这可能是深度学习中最常用的正则化形式，因为它有效而且简单
@@ -336,24 +336,24 @@
 	- 输入：
 		- 当前验证集的误差不是最小值的次数 \\(p\\)
 		- 两次验证集上验证的间隔 \\(n\\)
-		- 初始参数 \\(\theta\_0\\)
+		- 初始参数 \\(\vec\theta\_0\\)
 	- 输出：
-		- 最佳参数 \\(\theta^{\*}\\)
+		- 最佳参数 \\(\vec\theta^{\*}\\)
 		- 获得最佳参数时迭代的步数  \\(i^{\*}\\)
 	- 算法步骤：
 		- 初始化：
-			- 参数变量 \\(\theta=\theta\_0\\)
+			- 参数变量 \\(\vec\theta=\vec\theta\_0\\)
 			- 迭代步数变量 \\(i=0\\)
 			- 验证次数变量 \\(j=0\\)
 			- 验证集的最小误差 \\(v=\infty\\)
-			- 最佳参数 \\(\theta^{\*}=\theta\\)
+			- 最佳参数 \\(\vec\theta^{\*}=\vec\theta\\)
 			- 最佳迭代步数 \\(i^{\*}=i\\)
 		- 循环，循环条件为： \\(j \lt p\\)：
 			- 学习模型 \\(n\\) 步
 			- 更新 \\(i=i+n\\)
-			- 记录最新的验证集误差 \\(v^{\prime}=\text{ValidationSetError}(\theta)\\)
+			- 记录最新的验证集误差 \\(v^{\prime}=\text{ValidationSetError}(\vec\theta)\\)
 			- 如果 \\(v^{\prime} \lt v\\)，则：
-				$$j=0,\theta^{\*}=\theta,i^{\*}=i,v=v^{\prime}		$$
+				$$j=0,\vec\theta^{\*}=\vec\theta,i^{\*}=i,v=v^{\prime}		$$
 			如果 \\(v^{\prime} \ge v\\)，则 \\(j=j+1\\)
 
 4. 我们可以认为：早停是一个非常高效的超参数选择算法
@@ -381,8 +381,8 @@
 	- 输入：训练集 \\(\mathbf X^{(train)}\\) ，  \\(\mathbf y^{(train)}\\)  
 	- 步骤：
 		- 将 \\(\mathbf X^{(train)}\\) 和 \\(\mathbf y^{(train)}\\) 分割为  \\((\mathbf X^{(subtrain)},\mathbf y^{(subtrain)})\\) 和 \\((\mathbf X^{(valid)},\mathbf y^{(valid)})\\)
-		- 随机选择参数的初始化值 \\(\theta_0\\)，将 \\((\mathbf X^{(subtrain)},\mathbf y^{(subtrain)})\\) 作为训练集， 将 \\((\mathbf X^{(valid)},\mathbf y^{(valid)})\\) 作为验证集，运行早停算法，返回最佳训练步数 \\(i^{\*}\\)
-		- 再次选择参数的另一个初始化值 \\(\theta_1\\)，在 \\((\mathbf X^{(train)},\mathbf y^{(train)})\\) 上再次训练  \\(i^{\*}\\) 步
+		- 随机选择参数的初始化值 \\(\vec\theta_0\\)，将 \\((\mathbf X^{(subtrain)},\mathbf y^{(subtrain)})\\) 作为训练集， 将 \\((\mathbf X^{(valid)},\mathbf y^{(valid)})\\) 作为验证集，运行早停算法，返回最佳训练步数 \\(i^{\*}\\)
+		- 再次选择参数的另一个初始化值 \\(\vec\theta_1\\)，在 \\((\mathbf X^{(train)},\mathbf y^{(train)})\\) 上再次训练  \\(i^{\*}\\) 步
 
 
 	另一个策略是：保持从第一轮训练中获得的参数，然后使用全部的数据继续训练。此时我们观察验证集的损失函数（根据早停策略，第二轮初始时，验证集的损失函数值是较大的），直到它低于第一轮停止时的训练集的损失函数值（这个值是较小的）。
@@ -391,29 +391,30 @@
 	- 输入：训练集 \\(\mathbf X^{(train)}\\) ，  \\(\mathbf y^{(train)}\\)  
 	- 步骤：
 		- 将 \\(\mathbf X^{(train)}\\) 和 \\(\mathbf y^{(train)}\\) 分割为  \\((\mathbf X^{(subtrain)},\mathbf y^{(subtrain)})\\) 和 \\((\mathbf X^{(valid)},\mathbf y^{(valid)})\\)
-		- 随机选择参数的初始化值 \\(\theta_0\\)，将 \\((\mathbf X^{(subtrain)},\mathbf y^{(subtrain)})\\) 作为训练集， 将 \\((\mathbf X^{(valid)},\mathbf y^{(valid)})\\) 作为验证集，运行早停算法，返回算法停止时的目标函数的值 \\(\epsilon=J(\theta,\mathbf X^{(subtrain)},\mathbf y^{(subtrain)})\\)
-		- 迭代： \\( while \;J(\theta,\mathbf X^{(valid)},\mathbf y^{(valid)}) \gt \epsilon\quad do\\)
+		- 随机选择参数的初始化值 \\(\vec\theta_0\\)，将 \\((\mathbf X^{(subtrain)},\mathbf y^{(subtrain)})\\) 作为训练集， 将 \\((\mathbf X^{(valid)},\mathbf y^{(valid)})\\) 作为验证集，运行早停算法，返回算法停止时的目标函数的值 \\(\epsilon=J(\vec\theta,\mathbf X^{(subtrain)},\mathbf y^{(subtrain)})\\)
+		- 迭代： \\( while \;J(\vec\theta,\mathbf X^{(valid)},\mathbf y^{(valid)}) \gt \epsilon\quad do\\)
 			- 在 \\(\mathbf X^{(valid)},\mathbf y^{(valid)}\\) 上训练 \\(n\\) 步
 			> 每隔 \\(n\\) 步检查一次
 
 ###2. 早停与 L2 正则化
-1. 早停充当正则化的原理：早停将优化过程的参数空间限制在初始参数值 \\(\theta_0\\) 的一个小的邻域内。
+1. 早停充当正则化的原理：早停将优化过程的参数空间限制在初始参数值 \\(\vec\theta_0\\) 的一个小的邻域内。
 
 	假设用学习率 \\(\epsilon\\) 进行了 \\(\tau\\) 个优化步骤（对应于 \\(\tau\\) 个训练迭代）：
 	- 我们将 \\(\epsilon\tau\\) 视作模型的有效容量 `effective capacity` 的度量。
-	- 假设梯度有界，则限制迭代的次数和学习率，会限制 \\(\theta\\) 从 \\(\theta_0\\) 能够到达的范围。
-	> 此时 \\(\epsilon\tau\\) 的行为就像是权重衰减系数的倒数。权重系数越大，则 \\(\theta\\) 越小，等价于  \\(\epsilon\tau\\)  越小。
+	- 假设梯度有界，则限制迭代的次数和学习率，会限制 \\(\vec\theta\\) 从 \\(\vec\theta_0\\) 能够到达的范围。
+	> 此时 \\(\epsilon\tau\\) 的行为就像是权重衰减系数的倒数。权重系数越大，则 \\(\vec\theta\\) 越小，等价于  \\(\epsilon\tau\\)  越小。
 
 	下图为早停与 \\(L_2\\) 正则化的示意图：
 
-	![early_stopping](early_stopping.jpg)
+	![early_stopping](../imgs/7/early_stopping.PNG)
+
 	- 左图/右图实线：负的对数似然函数（即 \\(J\\) ) 的等值线。最小点是 \\(\mathbf{\vec w}^{\*}\\) 
 	- 左图虚线：从原点开始的 `SGD` 经过的轨迹。
 	- 右图虚线为 \\(L_2\\) 正则化项的等值线。
 
 	由于早停，轨迹在 \\(\tilde{\mathbf{\vec w}}\\) 处停止，而不是在 \\(\mathbf{\vec w}^{\*}\\)  点。 而 \\(L\_2\\) 的正则化项使得总代价函数的最小值比非正则化代价函数的最小值更靠近原点。
 
-2.  假设参数 \\(\theta=\mathbf{\vec w}\\)。令 \\(\mathbf{\vec w}^{\*}=\arg\min\_{\mathbf{\vec w}}J(\mathbf{\vec w})\\)，它就是无正则化项时使得目标函数最小的权重向量。和 \\(L_2\\) 正则化中的推导相同，有：
+2.  假设参数 \\(\vec\theta=\mathbf{\vec w}\\)。令 \\(\mathbf{\vec w}^{\*}=\arg\min\_{\mathbf{\vec w}}J(\mathbf{\vec w})\\)，它就是无正则化项时使得目标函数最小的权重向量。和 \\(L_2\\) 正则化中的推导相同，有：
 	$$\nabla\_{\mathbf{\vec w}} \hat J(\mathbf{\vec w})=\mathbf H(\mathbf{\vec w}-\mathbf{\vec w}^{\*})$$
 		\\(\mathbf H\\) 为 \\(J\\) 在  \\(\mathbf{\vec w}^{\*}\\) 处的海森矩阵（由于 \\(\mathbf{\vec w}^{\*}\\) 是 \\(J(\mathbf{\vec w})\\) 的最小点，因此海森矩阵 \\(\mathbf H\\) 是半正定的）。 其中 \\(\mathbf{\vec w}\\)  在  \\(\mathbf{\vec w}^{\*}\\) 的附近。 
 
@@ -482,8 +483,8 @@
 
 ## 十、 稀疏表达
 1. 有一种策略是：鼓励 \\(\mathbf{\vec x}\\) 的表达 \\(\mathbf{\vec h}\\) 为稀疏的。即：
-	$$\tilde J(\theta;\mathbf X,\mathbf{\vec y})=J(\theta;\mathbf X,\mathbf{\vec y})+\alpha\Omega(\mathbf{\vec h}) $$
-	它与常规正则化区别是：它对 \\(\mathbf{\vec h}\\) 进行限制，而不是 \\(\theta\\) 进行限制
+	$$\tilde J(\vec\theta;\mathbf X,\mathbf{\vec y})=J(\vec\theta;\mathbf X,\mathbf{\vec y})+\alpha\Omega(\mathbf{\vec h}) $$
+	它与常规正则化区别是：它对 \\(\mathbf{\vec h}\\) 进行限制，而不是 \\(\vec\theta\\) 进行限制
 
 2. 要使得 \\(\mathbf{\vec h}\\)  是稀疏的，则有 \\(\Omega\\) 可以为：
 	- 采用 \\(L_1\\) 正则化：  \\(\Omega(\mathbf{\vec h})=||\mathbf{\vec h}||_1\\) 
@@ -536,11 +537,11 @@
 
 	下图中，右侧给出了`dropout`使用的所有子网络。
 	
-	![dropout](../imgs/7/dropout.jpg)
+	![dropout](../imgs/7/dropout.PNG)
 
 3. 假定一个掩码向量 \\(\vec \mu\\)，他给出了哪些单元被保留哪些单元被删除（掩码为 0 的单元被删除）。
 
-	定义 \\(J(\theta,\vec\mu)\\) 为参数 \\(\theta\\) 和掩码 \\(\vec\mu\\) 定义的模型代价。`dropout`的目标是最小化 \\(\mathbb E\_{\vec\mu}J(\theta,\vec\mu)\\)
+	定义 \\(J(\vec\theta,\vec\mu)\\) 为参数 \\(\vec\theta\\) 和掩码 \\(\vec\mu\\) 定义的模型代价。`dropout`的目标是最小化 \\(\mathbb E\_{\vec\mu}J(\vec\theta,\vec\mu)\\)
 	- 期望包含了指数多项（因为掩码向量有指数多个），但是我们可以通过抽样 \\(\vec\mu\\) 来获得梯度的无偏估计
 
 4. `dropout`训练与`bagging`训练不同：
